@@ -1,0 +1,14 @@
+# This file is where you define your pipelines. You can define multiple.
+# For more information on multiple pipelines, see the documentation:
+#   https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
+
+- pipeline.id: main
+  path.config: "/usr/share/logstash/pipeline"
+# - pipeline.id: vth-racs
+#   path.config: "/usr/share/logstash/pipeline/rac_index.conf"
+
+# - pipeline.id: movie
+#   path.config: "/usr/share/logstash/pipeline/movie_index.conf"
+
+# - pipeline.id: movie-cast
+#   path.config: "/usr/share/logstash/pipeline/movie_cast_index.conf"
