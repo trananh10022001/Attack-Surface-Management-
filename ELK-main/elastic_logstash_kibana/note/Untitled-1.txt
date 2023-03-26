@@ -1,1 +1,0 @@
-http://localhost:5601/app/canvas?auth_provider_hint=anonymous1#/workpad/workpad-bf0ce57b-18d6-4be0-849d-df276e8e5024/page/1?__fullScreen=true
