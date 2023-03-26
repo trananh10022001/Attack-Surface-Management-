@@ -1,5 +1,0 @@
-import nmap3
-nmap = nmap3.Nmap()
-version = nmap.nmap_version()
-version_result = nmap.nmap_version_detection("viettelcybersecurity.com", args="--script vulners --script-args mincvss+5.0")
-print(version_result)
