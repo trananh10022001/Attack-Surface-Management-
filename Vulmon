@@ -1,0 +1,59 @@
+import io
+
+import requests
+from bs4 import BeautifulSoup
+
+# tech = input('nhap domain: ') # Tên công nghệ bạn muốn tìm kiếm
+tech = 'cloudflare'
+url = f'https://vulmon.com/searchpage?q={tech}&sortby=byrelevance'
+response = requests.get(url)
+doc = response.text
+file = io.open('magic.html', mode = 'w', encoding='utf8')
+file.write(doc)
+soup = BeautifulSoup(response.content, 'html.parser')
+
+
+# cve_id = soup.find_all('div', class_='content')
+# print(cve_id)
+
+vulners = soup.find_all('a', class_='header',)
+print(vulners)
+
+# CVSS_score = soup.find_all('div', {'class': 'value'})
+# print(CVSS_score)
+# values = []
+# # for divs in CVSS_score:
+# #     divs = soup.select('div.value')
+#     # print(divs)
+# for div in CVSS_score:
+#     values.append(float(div.text.strip()))
+#     print(values)
+
+
+
+# div_tag = soup.find('div', {'class': 'value'})
+# cvss_score = CVSS_score.text
+# print(cvss_score)
+
+#
+# description = soup.find_all('div', class_='description')
+# print(description)
+#
+# extra = soup.find_all('div', class_='extra')
+# print(extra)
+
+# for value in cve_id:
+#     id = value.get('value')
+#     # print(cve_id)
+
+for vul in vulners:
+    cve = vul.get('href')
+    print('https://vulmon.com'+cve.strip())
+#     CVSS_score = soup.find_all('div', {'class': 'value'})
+#     values = [float(div.text.strip()) for div in CVSS_score]
+#     print(', '.join(str(value) for value in values))
+
+
+# for cve_score in vulners:
+#     cve_id = soup.find_all('div', class_='value')
+#     print(cve_id)
