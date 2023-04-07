@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Cài đặt Golang
+wget https://golang.org/dl/go$(curl -s https://golang.org/VERSION?m=text).windows-amd64.zip -O go.zip
+unzip go.zip -d /mnt/c/Go
+export PATH=$PATH:/mnt/c/Go/bin
+
+# Cài đặt Python latest
+curl https://www.python.org/ftp/python/$(curl -s https://www.python.org/downloads/ | grep 'Latest Python 3' | cut -d'>' -f3 | cut -d'<' -f1)/python-$(curl -s https://www.python.org/downloads/ | grep 'Latest Python 3' | cut -d'>' -f3 | cut -d'<' -f1)-amd64.exe --output python-latest.exe
+	# chạy file .exe để cài python
+export PATH=$PATH:/mnt/c/PythonXX/
+
+# Cài đặt pip3-python
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+
+# Cài đặt amass
+go install -v github.com/owasp-amass/amass/v3/...@master
+
+# Cài đặt nuclei
+go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+
+# Cài đặt Httpx
+go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+
+# Cài đặt Nmap
+Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+choco install nmap
+choco install nmap --version=7.9
+
+# Cài đặt thư viện nmap3-python
+pip install python-nmap3
+
+# Cài đặt thư viện dnspython
+pip install dnspython
+
+# Cài đặt thư viện os
+pip  install os-win
+
+# Cài đặt thư viện socket
+pip install socket
+
+#cài đặt thư viện json
+pip install json
+
+
