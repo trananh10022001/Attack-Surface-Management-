@@ -3,13 +3,17 @@ import nmap3
 import DB_Connection
 from datetime import datetime
 import dns.resolver
+import re
+import requests
+from bs4 import BeautifulSoup
 
 #AMASS
-AMASS_PATH = 'C:\\Users\\PC\\go\\bin\\amass.exe'
+AMASS_PATH = 'C:\\Users\\DOAN\\go\\bin\\amass.exe'
 
 #domain = input("Enter domain:")
-domain = "tryhackme.com"
+domain = "asm23.c1.biz"
 output_file = "subdomains.txt"
+cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file}")
 now = datetime.now()
 cursor = DB_Connection.cursor
 
@@ -22,7 +26,6 @@ for i in cursor.fetchone():
     count = i
 DB_Connection.connection.commit()
 
-#cmd = os.system(f"{AMASS_PATH} enum -d {domain} -o {output_file}")
 
 with open(output_file, "r") as f:
     subdomains = f.readlines()
@@ -73,13 +76,13 @@ for i in subdomains2:
     cursor.execute(query5)
 DB_Connection.connection.commit()
 
-query6 = "SELECT * FROM asm.ip_subdomains;"
-data3 = cursor.execute(query6)
-for i in cursor.fetchall():
-   print(i)
+# query6 = "SELECT * FROM asm.ip_subdomains;"
+# data3 = cursor.execute(query6)
+# for i in cursor.fetchall():
+#    print(i)
 
 ###NMAP
-NUCLEI_PATH = "C:\\Users\\PC\\go\\bin\\nuclei.exe"
+NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
 listIpFile = "listIP.txt"
 nmap = nmap3.Nmap()
 
@@ -126,7 +129,105 @@ for ip in list:
                     outputNuclei = outputNuclei.replace("'", "")
                     query9 = "INSERT INTO `asm`.`result_nuclei`(`output`,`id_ip`) VALUES ( '" + str(outputNuclei) + "','" + str(idMax) + "');"
                     cursor.execute(query9)
+                    #httpx
                     DB_Connection.connection.commit()
+                    cursor = DB_Connection.cursor
+                    
+                    HttpxPath = "C:\\Users\\DOAN\\go\\bin\\httpx.exe"
+                    # HttpxOutput = "D:\\Python201c\\PythonProject\\untitled\\httpx.txt"
+                    cmd = os.system(f"{HttpxPath} -target {ip} -ports 443 -no-color -tech-detect  -o output_httpx.txt")
+                    with open("output_httpx.txt", "r") as f:
+                        output = f.read()
+                    query8 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%tryhackme.com%'ORDER BY domain.id DESC LIMIT 1;"
+                    cursor.execute(query8)
+                    for i in cursor.fetchone():
+                        idMax = i
+                    # print(idMax)
+                    # query9 = "INSERT INTO `asm`.`result_httpx`(`output`,`id_domain`) VALUES ( '" + str(output) + "','" + str(idMax) + "');"
+                    # cursor.execute(query9)
+                    # DB_Connection.connection.commit()
+                    dict_web_tech = {}
+                    matches = re.findall(r'\[(.*?)\]', output)
+                    for i in matches:
+                        list_web_tech = str(i).split(",")
+                        for j in list_web_tech:
+                            if j not in dict_web_tech:
+                                dict_web_tech[j] = 1
+                            else:
+                                dict_web_tech[j] += 1
+                    for tech in dict_web_tech:
+                        url = f'https://vulmon.com/searchpage?q={tech}&sortby=byrelevance'
+                        response = requests.get(url)
+                        if(response.status_code == 200):
+                            soup = BeautifulSoup(response.content, 'html.parser')
+                            page_num = soup.find_all('div', class_='ui pagination menu')
+                            if not page_num:
+                                num = 2
+                            else:
+                                for pages in page_num:
+                                    soup = BeautifulSoup(pages.text, 'html.parser')
+                                    pages = soup.extract('a')
+                                    a = str(pages).replace("NEXT »",'').replace(' ', '')
+                                    pages = len(a)
+                                    num = pages - 2
+
+
+                        for count in range(1, num):
+                            url = f'https://vulmon.com/searchpage?q={tech}&sortby=byrelevance&page={count}'
+                            response = requests.get(url)
+                            if (response.status_code == 200):
+                                soup = BeautifulSoup(response.content, 'html.parser')
+                                text = ""
+                                text1 = soup.find_all('a', class_= 'header')
+                                list1=[]
+                                for i in text1 :
+                                    if(str(i).__contains__("header item") == False):
+                                        soup2 = BeautifulSoup(i.text,features='html.parser')
+                                        title = soup2.extract('a')
+                                        list1.append(title)
+                                        print(list1)
+
+
+
+                                list2 = []
+                                text2 = soup.find_all('div',class_='value')
+                                for i in text2:
+                                    soup3 = BeautifulSoup(i.text, 'html.parser')
+                                    cvss_point = soup3.extract('div')
+                                    list2.append(cvss_point)
+                                    print(list2)
+
+
+                                list3 = []
+                                text3 = soup.find_all('div',class_='description')
+                                for i in text3:
+                                    soup3 = BeautifulSoup(i.text, 'html.parser')
+                                    Descript = soup3.extract('a')
+                                    list3.append(Descript)
+                                    print(list3)
+
+                                list4=[]
+                                text4 = soup.find_all('div',class_='extra')
+                                for i in text4:
+                                    soup4 = BeautifulSoup(i.get_text('\n'), 'html.parser')
+                                    web_tech = soup4.extract('div')
+                                    list4.append(web_tech)
+                                    print(list4)
+
+                                list5 =[]
+                                for i in text1:
+                                    if (str(i).__contains__("header item") == False):
+                                        cve = i.get('href')
+                                        cve_link = 'https://vulmon.com'+cve.strip()
+                                        list5.append(cve_link)
+                                        print(list5)
+                                cursor = DB_Connection.cursor
+                                for i in range(0,len(list1)):
+                                    query = "INSERT INTO `asm`.`cve`(`cve_id`,`cvss_point`,`descriptions`,`web_tech`,`link`) VALUES ( '" +str(list1[i]) + "','" + str(list2[i]) + "','" + str(list3[i]).replace("&lt;=","before version").replace("'","") + "','" +str(list4[i])+ "','" +str(list5[i])+"');"
+                                    cursor.execute(query)
+                                DB_Connection.connection.commit()
+                            else:
+                                break
                 elif port['port'] == "80" and i['port'] == "443" and port['state'] == 'closed':
                     print(f"Port 80 and 443 are closed. Scanning for vulnerabilities with Nmap...")
                     results = nmap.nmap_version_detection(ip,args="--script vulners --script-args mincvss+1.0 -o output_Vuls_Nmap.txt")
