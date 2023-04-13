@@ -7,118 +7,118 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-#AMASS
-AMASS_PATH = 'C:\\Users\\DOAN\\go\\bin\\amass.exe'
+def scanDomain(domain1):
+    #AMASS
+    AMASS_PATH = 'C:\\Users\\DOAN\\go\\bin\\amass.exe'
 
-#domain = input("Enter domain:")
-domain = "asm23.c1.biz"
-output_file = "subdomains.txt"
-cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file}")
-now = datetime.now()
-cursor = DB_Connection.cursor
+    #domain = input("Enter domain:")
+    domain = domain1
+    output_file = "subdomains.txt"
+    cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file}")
+    now = datetime.now()
+    cursor = DB_Connection.cursor
 
-query0 = "SELECT COUNT(*) FROM asm.domain WHERE domain.domain_name = '"+str(domain)+"'"
-query1 = "INSERT INTO `asm`.`domain`(`domain_name`,`date_created`) VALUES ( '"+str(domain)+"','"+str(now)+"');"
-cursor.execute(query1)
-cursor.execute(query0)
-count = 0
-for i in cursor.fetchone():
-    count = i
-DB_Connection.connection.commit()
-
-
-with open(output_file, "r") as f:
-    subdomains = f.readlines()
-
-for subdomain in subdomains:
-    query2 =""
-    if count > 0:
-        query2 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%" + domain + "%'ORDER BY domain.id DESC LIMIT 1;"
-    data1 = cursor.execute(query2)
+    query0 = "SELECT COUNT(*) FROM asm.domain WHERE domain.domain_name = '"+str(domain)+"'"
+    query1 = "INSERT INTO `asm`.`domain`(`domain_name`,`date_created`) VALUES ( '"+str(domain)+"','"+str(now)+"');"
+    cursor.execute(query1)
+    cursor.execute(query0)
+    count = 0
     for i in cursor.fetchone():
-        id_domain = i
-    query3 ="INSERT INTO `asm`.`subdomains_amass`(`subdomain_name`,`date_created`,`id_domain`) VALUES ( '"+str(subdomain.strip())+"','"+str(now)+"','"+str(id_domain)+"');"
-    cursor.execute(query3)
-DB_Connection.connection.commit()
-#query1 = "SELECT * FROM asm.domain where domain_name = 'remote-us-west-1.tryhackme.com';"
-#data = cursor.execute(query1)
-#for i in cursor.fetchall():
- #   print(i)
-
-#DNSPython
-with open("subdomains.txt", "r") as f:
-    subdomains1 = f.read().splitlines()
-result = ""
-data = {}
-for subdomain in subdomains1:
-    try:
-        answers = dns.resolver.resolve(subdomain)
-        for answer in answers:
-            data[subdomain] = str(answer)
-        for answer in answers:
-            print(f"{subdomain}: {answer}")
-            result += f"{subdomain}: {answer} \n"
-    except dns.resolver.NXDOMAIN:
-        print(f"{subdomain}: NXDOMAIN")
-
-with open("listIP.txt", mode='w') as f:
-    f.write(result)
-with open("ListIP.txt", "r") as f:
-    subdomains2 = f.readlines()
-
-for i in subdomains2:
-    list = i.strip().split(": ")
-    query4 = "SELECT subdomains_amass.id FROM asm.subdomains_amass where subdomains_amass.subdomain_name = '"+list[0]+"'ORDER BY subdomains_amass.id DESC LIMIT 1;"
-    data2 = cursor.execute(query4)
-    for j in cursor.fetchone():
-        id_subdomain = j
-    query5 ="INSERT INTO `asm`.`ip_subdomains`(`ip`,`date_created`,`id_subdomain`) VALUES ( '"+str(list[1])+"','"+str(now)+"'"+",'"+str(id_subdomain)+"');"
-    cursor.execute(query5)
-DB_Connection.connection.commit()
-
-# query6 = "SELECT * FROM asm.ip_subdomains;"
-# data3 = cursor.execute(query6)
-# for i in cursor.fetchall():
-#    print(i)
-
-###NMAP
-NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
-listIpFile = "listIP.txt"
-nmap = nmap3.Nmap()
+        count = i
+    DB_Connection.connection.commit()
 
 
-with open(listIpFile, "r") as f:
-    listIP = f.read().splitlines()
+    with open(output_file, "r") as f:
+        subdomains = f.readlines()
 
-list = []
-for i in listIP:
-    list.append(i.split(": ")[1].strip())
-for ip in list:
-    idIpMax = 0
-    query8 = "SELECT ip_subdomains.id FROM asm.ip_subdomains where ip_subdomains.ip = '" +str(ip)+"' ORDER BY ip_subdomains.id DESC LIMIT 1;"
-    cursor.execute(query8)
-    for j in cursor.fetchone():
-        idIpMax = j
-    print(idIpMax)
-    results = nmap.scan_top_ports(ip.strip())
-    ports = []
-    for port in results[ip.strip()]['ports']:
-        port_id = port['portid']
-        state = port['state']
-        service = port['service']['name']
-        ports.append({'port': port_id, 'state': state, 'service': service})
-        with open("nmap.txt", "w") as file:
+    for subdomain in subdomains:
+        query2 =""
+        if count > 0:
+            query2 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%" + domain + "%'ORDER BY domain.id DESC LIMIT 1;"
+        data1 = cursor.execute(query2)
+        for i in cursor.fetchone():
+            id_domain = i
+        query3 ="INSERT INTO `asm`.`subdomains_amass`(`subdomain_name`,`date_created`,`id_domain`) VALUES ( '"+str(subdomain.strip())+"','"+str(now)+"','"+str(id_domain)+"');"
+        cursor.execute(query3)
+    DB_Connection.connection.commit()
+    #query1 = "SELECT * FROM asm.domain where domain_name = 'remote-us-west-1.tryhackme.com';"
+    #data = cursor.execute(query1)
+    #for i in cursor.fetchall():
+     #   print(i)
+
+    #DNSPython
+    with open("subdomains.txt", "r") as f:
+        subdomains1 = f.read().splitlines()
+    result = ""
+    data = {}
+    for subdomain in subdomains1:
+        try:
+            answers = dns.resolver.resolve(subdomain)
+            for answer in answers:
+                data[subdomain] = str(answer)
+            for answer in answers:
+                print(f"{subdomain}: {answer}")
+                result += f"{subdomain}: {answer} \n"
+        except dns.resolver.NXDOMAIN:
+            print(f"{subdomain}: NXDOMAIN")
+
+    with open("listIP.txt", mode='w') as f:
+        f.write(result)
+    with open("ListIP.txt", "r") as f:
+        subdomains2 = f.readlines()
+
+    for i in subdomains2:
+        list = i.strip().split(": ")
+        query4 = "SELECT subdomains_amass.id FROM asm.subdomains_amass where subdomains_amass.subdomain_name = '"+list[0]+"'ORDER BY subdomains_amass.id DESC LIMIT 1;"
+        data2 = cursor.execute(query4)
+        for j in cursor.fetchone():
+            id_subdomain = j
+        query5 ="INSERT INTO `asm`.`ip_subdomains`(`ip`,`date_created`,`id_subdomain`) VALUES ( '"+str(list[1])+"','"+str(now)+"'"+",'"+str(id_subdomain)+"');"
+        cursor.execute(query5)
+    DB_Connection.connection.commit()
+
+    query6 = "SELECT * FROM asm.ip_subdomains;"
+    data3 = cursor.execute(query6)
+    for i in cursor.fetchall():
+       print(i)
+
+    ###NMAP
+    NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
+    listIpFile = "listIP.txt"
+    nmap = nmap3.Nmap()
+
+
+    with open(listIpFile, "r") as f:
+        listIP = f.read().splitlines()
+
+    list = []
+    for i in listIP:
+        list.append(i.split(": ")[1].strip())
+    for ip in list:
+        idIpMax = 0
+        query8 = "SELECT ip_subdomains.id FROM asm.ip_subdomains where ip_subdomains.ip = '" +str(ip)+"' ORDER BY ip_subdomains.id DESC LIMIT 1;"
+        cursor.execute(query8)
+        for j in cursor.fetchone():
+            idIpMax = j
+        print(idIpMax)
+        results = nmap.scan_top_ports(ip.strip())
+        ports = []
+        for port in results[ip.strip()]['ports']:
+            port_id = port['portid']
+            state = port['state']
+            service = port['service']['name']
+            ports.append({'port': port_id, 'state': state, 'service': service})
+            with open("nmap.txt", "w") as file:
+                for port in ports:
+                    query9 = "INSERT INTO `asm`.`result_nmap`(`port_number`,`status`,`protocol`,`id_ip`) VALUES ( '"+str(port['port'])+"','"+str(port['state'])+"'"+",'"+str(port['service'])+"','"+str(idIpMax)+"');"
+                    cursor.execute(query9)
+                    file.write(f"Port: {port['port']}, State: {port['state']}, Service: {port['service']}\n")
+            DB_Connection.connection.commit()
             for port in ports:
-                query9 = "INSERT INTO `asm`.`result_nmap`(`port_number`,`status`,`protocol`,`id_ip`) VALUES ( '"+str(port['port'])+"','"+str(port['state'])+"'"+",'"+str(port['service'])+"','"+str(idIpMax)+"');"
-                cursor.execute(query9)
-                file.write(f"Port: {port['port']}, State: {port['state']}, Service: {port['service']}\n")
-        DB_Connection.connection.commit()
-        for port in ports:
-            for i in ports:
-                if port['port'] == "80" and i['port'] == "443" and port['state'] == 'open':
-                    print(f"Port 80 and 443 are open in {ip}. Scanning for vulnerabilities with Nuclei and Httpx...")
+                if (port['port'] == "80" or port['port'] == "443") and port['state'] == 'open':
+                    print(f"Port"+ str(port['port']) +"are open in "+str(ip)+". Scanning for vulnerabilities with Nuclei and Httpx...")
                     print('nuclei result:')
-                    cmd = os.system(f"{NUCLEI_PATH} -target {ip} -o nuclei.txt")
+                    cmd = os.system(f"{NUCLEI_PATH} -target "+str(ip)+":"+port['port'] +" -o nuclei.txt")
                     with open("nuclei.txt", "r") as f:
                         outputNuclei = f.read()
                     idMax = 0
@@ -132,20 +132,20 @@ for ip in list:
                     #httpx
                     DB_Connection.connection.commit()
                     cursor = DB_Connection.cursor
-                    
+
                     HttpxPath = "C:\\Users\\DOAN\\go\\bin\\httpx.exe"
                     # HttpxOutput = "D:\\Python201c\\PythonProject\\untitled\\httpx.txt"
-                    cmd = os.system(f"{HttpxPath} -target {ip} -ports 443 -no-color -tech-detect  -o output_httpx.txt")
+                    cmd = os.system(f"{HttpxPath} -target {ip} -ports "+port['port'] +" -no-color -tech-detect  -o output_httpx.txt")
                     with open("output_httpx.txt", "r") as f:
                         output = f.read()
-                    query8 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%tryhackme.com%'ORDER BY domain.id DESC LIMIT 1;"
+                    query8 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%"+str(domain)+"%'ORDER BY domain.id DESC LIMIT 1;"
                     cursor.execute(query8)
                     for i in cursor.fetchone():
                         idMax = i
                     # print(idMax)
-                    # query9 = "INSERT INTO `asm`.`result_httpx`(`output`,`id_domain`) VALUES ( '" + str(output) + "','" + str(idMax) + "');"
-                    # cursor.execute(query9)
-                    # DB_Connection.connection.commit()
+                    query9 = "INSERT INTO `asm`.`result_httpx`(`output`,`id_domain`) VALUES ( '" + str(output) + "','" + str(idMax) + "');"
+                    cursor.execute(query9)
+                    DB_Connection.connection.commit()
                     dict_web_tech = {}
                     matches = re.findall(r'\[(.*?)\]', output)
                     for i in matches:
@@ -222,22 +222,26 @@ for ip in list:
                                         list5.append(cve_link)
                                         print(list5)
                                 cursor = DB_Connection.cursor
+                                query20 = "SELECT domain.id FROM asm.domain where domain.domain_name LIKE '%" + domain + "%'ORDER BY domain.id DESC LIMIT 1;"
+                                cursor.execute(query20)
+                                for i in cursor.fetchone():
+                                    id_Domain = i
                                 for i in range(0,len(list1)):
-                                    query = "INSERT INTO `asm`.`cve`(`cve_id`,`cvss_point`,`descriptions`,`web_tech`,`link`) VALUES ( '" +str(list1[i]) + "','" + str(list2[i]) + "','" + str(list3[i]).replace("&lt;=","before version").replace("'","") + "','" +str(list4[i])+ "','" +str(list5[i])+"');"
+                                    query = "INSERT INTO `asm`.`cve`(`cve_id`,`cvss_point`,`descriptions`,`web_tech`,`link`,`id_domain`) VALUES ( '" +str(list1[i]) + "','" + str(list2[i]) + "','" + str(list3[i]).replace("&lt;=","before version").replace("'","") + "','" +str(list4[i])+ "','" +str(list5[i])+"','"+str(id_Domain)+"');"
                                     cursor.execute(query)
                                 DB_Connection.connection.commit()
                             else:
                                 break
-                elif port['port'] == "80" and i['port'] == "443" and port['state'] == 'closed':
-                    print(f"Port 80 and 443 are closed. Scanning for vulnerabilities with Nmap...")
-                    results = nmap.nmap_version_detection(ip,args="--script vulners --script-args mincvss+1.0 -o output_Vuls_Nmap.txt")
-                    with open("output_Vuls_Nmap.txt", "r") as f:
-                        outputVulsNmap = f.read()
-                    idMax = 0
-                    query10 = "SELECT ip_subdomains.id FROM asm.ip_subdomains where ip_subdomains.ip = '" + str(ip.strip()) + "' ORDER BY ip_subdomains.id DESC LIMIT 1;"
-                    cursor.execute(query10)
-                    for i in cursor.fetchone():
-                        idMax = i
-                    query11 = "INSERT INTO `asm`.`result_vuls_nmap`(`output`,`id_ip`) VALUES ( '" + str(outputVulsNmap) + "','" + str(idMax) + "');"
-                    cursor.execute(query11)
-                    DB_Connection.connection.commit()
+
+        print(f"Scanning "+str(ip) + " for vulnerabilities with Nmap...")
+        results = nmap.nmap_version_detection(ip,args="--script vulners --script-args mincvss+1.0 -o output_Vuls_Nmap.txt")
+        with open("output_Vuls_Nmap.txt", "r") as f:
+            outputVulsNmap = f.read()
+        idMax = 0
+        query10 = "SELECT ip_subdomains.id FROM asm.ip_subdomains where ip_subdomains.ip = '" + str(ip.strip()) + "' ORDER BY ip_subdomains.id DESC LIMIT 1;"
+        cursor.execute(query10)
+        for i in cursor.fetchone():
+            idMax = i
+        query11 = "INSERT INTO `asm`.`result_vuls_nmap`(`output`,`id_ip`) VALUES ( '" + str(outputVulsNmap) + "','" + str(idMax) + "');"
+        cursor.execute(query11)
+        DB_Connection.connection.commit()
