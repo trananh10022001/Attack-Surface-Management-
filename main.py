@@ -10,9 +10,6 @@ from bs4 import BeautifulSoup
 def scanDomain(domain):
     #AMASS
     AMASS_PATH = 'C:\\Users\\DOAN\\go\\bin\\amass.exe'
-
-    #domain = input("Enter domain:")
-    # domain = domain1
     output_file = "subdomains.txt"
     cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file}")
     now = datetime.now()
@@ -41,10 +38,6 @@ def scanDomain(domain):
         query3 ="INSERT INTO `asm`.`subdomains_amass`(`subdomain_name`,`date_created`,`id_domain`) VALUES ( '"+str(subdomain.strip())+"','"+str(now)+"','"+str(id_domain)+"');"
         cursor.execute(query3)
     DB_Connection.connection.commit()
-    #query1 = "SELECT * FROM asm.domain where domain_name = 'remote-us-west-1.tryhackme.com';"
-    #data = cursor.execute(query1)
-    #for i in cursor.fetchall():
-     #   print(i)
 
     #DNSPython
     with open("subdomains.txt", "r") as f:
@@ -77,11 +70,6 @@ def scanDomain(domain):
         cursor.execute(query5)
     DB_Connection.connection.commit()
 
-    # query6 = "SELECT * FROM asm.ip_subdomains;"
-    # data3 = cursor.execute(query6)
-    # for i in cursor.fetchall():
-    #    print(i)
-
     ###NMAP
     NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
     listIpFile = "listIP.txt"
@@ -103,6 +91,7 @@ def scanDomain(domain):
             idIpMax = j
         print(idIpMax)
         results = nmap.scan_top_ports(ip.strip())
+        
         ports = []
         for port in results[ip.strip()]['ports']:
             port_id = port['portid']
@@ -111,10 +100,13 @@ def scanDomain(domain):
             ports.append({'port': port_id, 'state': state, 'service': service})
             with open("nmap.txt", "w") as file:
                 for port in ports:
-                    query9 = "INSERT INTO `asm`.`result_nmap`(`port_number`,`status`,`protocol`,`id_ip`) VALUES ( '"+str(port['port'])+"','"+str(port['state'])+"'"+",'"+str(port['service'])+"','"+str(idIpMax)+"');"
-                    cursor.execute(query9)
                     file.write(f"Port: {port['port']}, State: {port['state']}, Service: {port['service']}\n")
-            DB_Connection.connection.commit()
+            
+        for port in ports:
+            query9 = "INSERT INTO `asm`.`result_nmap`(`port_number`,`status`,`protocol`,`id_ip`) VALUES ( '"+str(port['port'])+"','"+str(port['state'])+"'"+",'"+str(port['service'])+"','"+str(idIpMax)+"');"
+            cursor.execute(query9)
+        DB_Connection.connection.commit()
+
         for port in ports:
             if (port['port'] == "80" or port['port'] == "443") and port['state'] == 'open':
                 print(f"Port "+ str(port['port']) +" are open in "+str(ip)+". Scanning for vulnerabilities with Nuclei and Httpx...")
@@ -136,7 +128,6 @@ def scanDomain(domain):
                 cursor = DB_Connection.cursor
 
                 HttpxPath = "C:\\Users\\DOAN\\go\\bin\\httpx.exe"
-                # HttpxOutput = "D:\\Python201c\\PythonProject\\untitled\\httpx.txt"
                 cmd = os.system(f"{HttpxPath} -target {ip} -ports "+port['port'] +" -no-color -tech-detect  -o output_httpx.txt")
                 with open("output_httpx.txt", "r") as f:
                     output = f.read()
@@ -144,7 +135,7 @@ def scanDomain(domain):
                 cursor.execute(query8)
                 for i in cursor.fetchone():
                     idMax = i
-                # print(idMax)
+                
                 query9 = "INSERT INTO `asm`.`result_httpx`(`output`,`id_domain`) VALUES ( '" + str(output) + "','" + str(idMax) + "');"
                 cursor.execute(query9)
                 DB_Connection.connection.commit()
@@ -252,5 +243,4 @@ def run_scan(domain):
      scanDomain(domain)
 
 run_scan('asmsp23.online')
-#run_scan ('vietstock.com')
 
