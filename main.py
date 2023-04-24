@@ -16,7 +16,7 @@ def scanDomain(domain):
     cursor = DB_Connection.cursor
 
     query0 = "SELECT COUNT(*) FROM asm.domain WHERE domain.domain_name = '"+str(domain)+"'"
-    query1 = "INSERT INTO `asm`.`domain`(`domain_name`,`date_created`) VALUES ( '"+str(domain)+"','"+str(now)+"');"
+    query1 = "INSERT INTO `asm`.`domain`(`domain_name`,`date_created`,`start_time`,`status`) VALUES ( '"+str(domain)+"','"+str(now)+"','"+str(now)+"','1');"
     cursor.execute(query1)
     cursor.execute(query0)
     count = 0
@@ -187,7 +187,12 @@ def scanDomain(domain):
                             for i in text2:
                                 soup3 = BeautifulSoup(i.text, 'html.parser')
                                 cvss_point = soup3.extract('div')
-                                list2.append(cvss_point)
+                                float_cvss_point = 0.0
+                                if(str(cvss_point) == 'NA'):
+                                    float_cvss_point = 0.0 
+                                else:
+                                    float_cvss_point = float(str(cvss_point))
+                                list2.append(float_cvss_point)
                                 print(list2)
 
 
@@ -239,8 +244,7 @@ def scanDomain(domain):
         cursor.execute(query11)
         DB_Connection.connection.commit()
 
-def run_scan(domain):
-     scanDomain(domain)
+# def run_scan(domain):
+#      scanDomain(domain)
 
-run_scan('asmsp23.online')
-
+# run_scan('asmsp23.online')
