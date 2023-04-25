@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+  <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+  <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <!--    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css">-->
+  <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.material.min.css">-->
+  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script language="javascript" type="text/javascript">
+    // $('#example').DataTable( {
+    //     "paging":   false,
+    //     "ordering": true,
+    //     "info":     false,
+    //
+    //     searching: false
+    // } );
+  </script>
+  <title>ASM</title>
+</head>
+
+<body>
+<!-- Navigation -->
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+  <div th:replace="~{/fragments/header.html}"></div>
+  <div class="main-content-wrap">
+    <!-- Start::Main header  -->
+    <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+      <!-- Start::Header menu-->
+      <!-- End::Header menu-->
+    </header>
+    <div class="main-content-body">
+      <!-- Start:: content (Your custom content)  -->
+      <div class="subheader px-lg" style="padding: 0">
+        <div class="subheader-container">
+          <div class="subheader-main">
+            <nav aria-label="breadcrumb" class="ul-breadcrumb">
+              <ol class="ul-breadcrumb-items">
+                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                >home</i></a></li>
+                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                <li class="breadcrumb-item active"><a href="#">My Scan</a></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row align-items-center">
+              <div class="col-sm-12 col-md-6">
+                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+                  <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+              </div>
+            </div>
+            <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;">
+              <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">Edit Scan</h2>
+              <div style="color: white" class="p-1 m-0 text-16">
+                <!--                                <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#ModalAdd" style="cursor: pointer"></i>-->
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <form id="editForm" th:object="${domain}" method="post" action="edit-scan">
+                  <div class="form-group col-md-12">
+                    <label for="domain" class="ml-2" style="font-size: 15px">Domain</label>
+                    <input type="text" class="form-control mt-2" name="domain" th:field="*{domainName}" id="domain" required="required">
+                    <input type="text" class="form-control mt-2" th:field="*{id}" style="display: none">
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="startTime" class="ml-2" style="font-size: 15px">Start Time</label>
+                    <input type="datetime-local" class="form-control mt-2" id="startTime" th:field="*{startTime}" disabled name="startTime" required="required" style="font-size: 14px;">
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="endTime" class="ml-2" style="font-size: 15px">End Time</label>
+                    <input type="datetime-local" class="form-control mt-2" id="endTime"  th:field="*{endTime}" disabled name="endTime" required="required" style="font-size: 14px;">
+                  </div>
+                </form>
+                <div class="row" style="align-items: center">
+                    <button class="btn btn-flat-success mr-3" onclick="submitForm()">Edit</button>
+                    <button class="btn btn-flat-success mr-3" onclick="onCancel()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!---->
+
+      <!-- End:: Footer-->
+    </div>
+    <!-- End::Main header-->
+  </div>
+</div>
+<script>
+  function onCancel(){
+    window.location.href='/scan';
+  }
+  function submitForm(){
+    var form = document.getElementById('editForm');
+    if(confirm("Are you sure want to edit?")){
+      form.submit();
+    }
+    // callPython(document.getElementById("domain").value);
+  }
+  function callPython(data)
+  {
+    var ws = new WebSocket("ws://localhost:1337/");
+
+    ws.onopen = function(){
+      console.log("Connection is Established");
+      console.log(data.toString());
+
+      // lay gia tri input truyen vao day nhe
+      ws.send(data.toString());
+    };
+
+    ws.onmessage = function(evt) {
+      var received_msg = evt.data;
+      console.log(received_msg);
+    };
+  }
+</script>
+</body>
+
+</html>

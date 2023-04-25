@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+  <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+  <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <!--    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css">-->
+  <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.material.min.css">-->
+  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script language="javascript" type="text/javascript">
+    // $('#example').DataTable( {
+    //     "paging":   false,
+    //     "ordering": true,
+    //     "info":     false,
+    //
+    //     searching: false
+    // } );
+  </script>
+  <title>ASM</title>
+</head>
+
+<body>
+<!-- Navigation -->
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+  <div th:replace="~{/fragments/header.html}"></div>
+  <div class="main-content-wrap">
+    <!-- Start::Main header  -->
+    <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+      <!-- Start::Header menu-->
+      <!-- End::Header menu-->
+    </header>
+    <div class="main-content-body">
+      <!-- Start:: content (Your custom content)  -->
+      <div class="subheader px-lg" style="padding: 0">
+        <div class="subheader-container">
+          <div class="subheader-main">
+            <nav aria-label="breadcrumb" class="ul-breadcrumb">
+              <ol class="ul-breadcrumb-items">
+                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                >home</i></a></li>
+                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                <li class="breadcrumb-item active"><a href="#">My Scan</a></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row align-items-center">
+              <div class="col-sm-12 col-md-6">
+                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+                  <div class="nav-pills-primary">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                      <li class="nav-item">
+                        <a
+                                class="nav-link"
+                                id="pills-home-tab"
+                                data-toggle="pill"
+                                th:href="@{/scan}"
+                                role="tab"
+                                aria-controls="pills-home"
+                                aria-selected="true"
+                        >Scan</a
+                        >
+                      </li>
+                      <li class="nav-item">
+                        <a
+                                class="nav-link active"
+                                id="pills-profile-tab"
+                                data-toggle="pill"
+                                href="#"
+                                role="tab"
+                                aria-controls="pills-profile"
+                                aria-selected="false"
+                        >Setting</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="input-group" style="position: relative;width: 75%;margin-left: auto;margin-bottom: 15px;">
+                  <input class="form-control" id="textSearch" value="" type="text" placeholder="Search for scan" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;">
+                  <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                    <button class="btn btn-secondary"  type="button" th:onclick="|handleSearch()|">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;">
+              <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">My Scan</h2>
+              <div style="color: white" class="p-1 m-0 text-16">
+                <!--                                <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#ModalAdd" style="cursor: pointer"></i>-->
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <form id="formScan">
+                  <div class="form-group col-md-12">
+                    <label for="domain" class="ml-2" style="font-size: 15px">Domain</label>
+                    <input type="text" class="form-control mt-2" name="domain" id="domain" required>
+                  </div>
+                  <div class="form-group col-md-12">
+                    <label for="Description" class="ml-2" style="font-size: 15px">Description</label>
+                    <input type="email" class="form-control mt-2" id="Description" name="description" required style="font-size: 14px;">
+                  </div>
+                </form>
+                <div class="row" style="align-items: center">
+                  <div class="col-4">
+                    <button class="btn btn-flat-success mr-3" onclick="submitForm()">Scan</button>
+                    <button class="btn btn-flat-light">Cancel</button>
+                  </div>
+                  <div class="col-8">
+<!--                    <button class="bg-info" style="margin-left: 300px">Processing</button>-->
+                    <button id="progressBar" class="bg-light" style="margin-left: 300px;width: 200px;height: 50px">None Select</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!---->
+
+      <!-- End:: Footer-->
+    </div>
+    <!-- End::Main header-->
+  </div>
+</div>
+<script>
+  function submitForm(){
+    var domain= document.getElementsByName("domain")[0];
+    if(domain.value=== "") {
+      domain.reportValidity();
+      return;
+    }
+    var description= document.getElementsByName("description")[0];
+    if(description.value=== ""){
+      description.reportValidity();
+      return;
+    }
+    // var form = document.getElementById('domainForm');
+    callPython(document.getElementById("domain").value);
+    // form.submit();
+  }
+  function callPython(data)
+  {
+    $('#progressBar').text("Progressing")
+    $('#progressBar').removeClass("bg-light")
+    $('#progressBar').addClass("bg-info")
+    var ws = new WebSocket("ws://localhost:1337/");
+
+    ws.onopen = function(){
+      console.log("Connection is Established");
+      console.log(data.toString());
+
+      // lay gia tri input truyen vao day
+      ws.send(data.toString());
+    };
+
+    ws.onmessage = function(evt) {
+      var received_msg = evt.data;
+      console.log(received_msg);
+    };
+    $('#progressBar').text("Completed")
+    $('#progressBar').removeClass("bg-info")
+    $('#progressBar').addClass("bg-success")
+  }
+
+</script>
+</body>
+
+</html>

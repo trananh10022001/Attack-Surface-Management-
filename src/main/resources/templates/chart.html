@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+    <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<!--    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css">-->
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.material.min.css">-->
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <title>ASM</title>
+</head>
+
+<body>
+<!-- Navigation -->
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+    <div th:replace="~{/fragments/header.html}"></div>
+    <div class="main-content-wrap">
+        <!-- Start::Main header  -->
+        <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+            <!-- Start::Header menu-->
+            <!-- End::Header menu-->
+        </header>
+        <div class="main-content-body">
+            <!-- Start:: content (Your custom content)  -->
+            <div class="subheader px-lg" style="padding: 0">
+                <div class="subheader-container">
+                    <div class="subheader-main">
+                        <nav aria-label="breadcrumb" class="ul-breadcrumb">
+                            <ol class="ul-breadcrumb-items">
+                                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                                >home</i></a></li>
+                                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                                <li class="breadcrumb-item active"><a href="#">Chart Management</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+<!--                                    <select class="form-control js-basic-example2" id="filterType" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;" onchange="filter()">-->
+<!--                                        <option value="application" ${filter == 'application' ? 'selected' : ''}><spring:message code="file.media"/></option>-->
+<!--                                        <option value="image" ${filter == 'image' ? 'selected' : ''}><spring:message code="file.file"/></option>-->
+<!--                                    </select>-->
+                                    <div class="btn-group" style="margin-left: 10px">
+                                        <button th:onclick="|exportExcelAll()|" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-download">Export Excel</i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+<!--                                <div class="input-group" style="position: relative;width: 75%;margin-left: auto;margin-bottom: 15px;">-->
+<!--                                    <input class="form-control" id="textSearch" value="" type="text" placeholder="Search for domain" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;">-->
+<!--                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">-->
+<!--                                        <button class="btn btn-secondary"  type="button" th:onclick="|handleSearch()|">-->
+<!--                                            <i class="fa fa-search"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                        <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;margin-bottom: 3rem">
+                            <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">Chart Management</h2>
+                            <div style="color: white" class="p-1 m-0 text-16">
+<!--                                <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#ModalAdd" style="cursor: pointer"></i>-->
+                            </div>
+                        </div>
+<!--                        Chart-->
+                        <div style="margin-left: auto; margin-right: auto;height: 540px !important; width: 960px !important;">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                        <div style="text-align: center;">
+                            <h3>Chart. List CVE of Subdomain</h3>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+<!---->
+            <!-- End:: Footer-->
+        </div>
+        <!-- End::Main header-->
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+    const ctx = document.getElementById('myChart');
+
+    let cvesNoRick = [[${cvesNoRick}]]
+    let cvesLow = [[${cvesLow}]]
+    let cvesMedium = [[${cvesMedium}]]
+    let cvesHigh = [[${cvesHigh}]]
+    let cvesCritical = [[${cvesCritical}]]
+    let cves = [[${cves}]]
+
+    // console.log("cvesNoRick", cvesNoRick);
+    // console.log("cvesLow", cvesLow);
+    // console.log("cvesHigh", cvesHigh);
+    // console.log("cvesCritical", cvesCritical);
+
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["Critical Risk", "High Risk", "Medium Risk", "Low Risk", "No Risk"],
+            datasets: [
+                {
+                    label: "List CVE of Subdomain",
+                    data: [cvesCritical.length, cvesHigh.length, cvesMedium.length, cvesLow.length, cvesNoRick.length],
+                    borderWidth: 1,
+                    backgroundColor: [
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(255, 159, 64, 0.2)",
+                        "rgba(255, 205, 86, 0.2)",
+                        "rgba(14,253,3,0.2)",
+                        "rgba(201, 203, 207, 0.2)"
+                    ],
+                    borderColor: [
+                        "rgb(255, 99, 132)",
+                        "rgb(255, 159, 64)",
+                        "rgb(255, 205, 86)",
+                        "rgba(6,248,18,0.35)",
+                        "rgb(201, 203, 207)"
+                    ]
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            onClick: function(event, elements) {
+                if (elements.length > 0) {
+                    // Lấy chỉ số của cột được click
+                    var index = elements[0].index;
+                    console.log("index", index)
+                    // Chuyển hướng sang đường link tương ứng
+                    window.location.href = window.location.protocol + "//" + window.location.host + "/cve/" + window.location.href.split("/")[4] + "?chartColumn=" + index;
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
