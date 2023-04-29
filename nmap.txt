@@ -2,7 +2,9 @@ Port: 21, State: filtered, Service: ftp
 Port: 22, State: filtered, Service: ssh
 Port: 23, State: filtered, Service: telnet
 Port: 25, State: filtered, Service: smtp
-Port: 80, State: open, Service: http
+Port: 80, State: filtered, Service: http
 Port: 110, State: filtered, Service: pop3
 Port: 139, State: filtered, Service: netbios-ssn
-Port: 443, State: open, Service: https
+Port: 443, State: filtered, Service: https
+Port: 445, State: filtered, Service: microsoft-ds
+Port: 3389, State: filtered, Service: ms-wbt-server
