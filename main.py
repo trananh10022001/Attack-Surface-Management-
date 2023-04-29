@@ -149,7 +149,7 @@ def scanDomain(domain):
                         else:
                             dict_web_tech[j] += 1
                 for tech in dict_web_tech:
-                    url = f'https://vulmon.com/searchpage?q={tech}&sortby=byrelevance'
+                    url = f"https://vulmon.com/searchpage?q="+str(tech).replace(':',' ')+"&sortby=byrelevance"
                     response = requests.get(url)
                     if(response.status_code == 200):
                         soup = BeautifulSoup(response.content, 'html.parser')
@@ -240,10 +240,9 @@ def scanDomain(domain):
         cursor.execute(query10)
         for i in cursor.fetchone():
             idMax = i
-        query11 = "INSERT INTO `asm`.`result_vuls_nmap`(`output`,`id_ip`) VALUES ( '" + str(outputVulsNmap) + "','" + str(idMax) + "');"
+        query11 = "INSERT INTO `asm`.`result_vuls_nmap`(`output`,`id_ip`) VALUES ( '" + str(outputVulsNmap.replace("'","")) + "','" + str(idMax) + "');"
         cursor.execute(query11)
         DB_Connection.connection.commit()
-
 # def run_scan(domain):
 #      scanDomain(domain)
 
