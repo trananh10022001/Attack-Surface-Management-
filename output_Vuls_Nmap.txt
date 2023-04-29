@@ -1,31 +1,29 @@
-# Nmap 7.93 scan initiated Sun Apr  2 00:57:59 2023 as: "C:/Program Files (x86)/Nmap/nmap.exe" -v -oX - -sV --script vulners --script-args mincvss+1.0 -o output_Vuls_Nmap.txt 34.101.62.222
-Nmap scan report for 222.62.101.34.bc.googleusercontent.com (34.101.62.222)
-Host is up (0.11s latency).
-Not shown: 991 filtered tcp ports (no-response)
-PORT     STATE  SERVICE       VERSION
-20/tcp   closed ftp-data
-21/tcp   open   ftp           vsftpd 3.0.3
-22/tcp   open   ssh           OpenSSH 8.4p1 Debian 5+deb11u1 (protocol 2.0)
-| vulners: 
-|   cpe:/a:openbsd:openssh:8.4p1: 
-|     	CVE-2021-28041	4.6	https://vulners.com/cve/CVE-2021-28041
-|     	CVE-2021-41617	4.4	https://vulners.com/cve/CVE-2021-41617
-|     	CVE-2020-14145	4.3	https://vulners.com/cve/CVE-2020-14145
-|     	CVE-2016-20012	4.3	https://vulners.com/cve/CVE-2016-20012
-|_    	CVE-2021-36368	2.6	https://vulners.com/cve/CVE-2021-36368
-80/tcp   open   http          nginx 1.22.1
-|_http-server-header: nginx/1.22.1
-443/tcp  open   ssl/http      nginx 1.22.1
-|_http-server-header: nginx/1.22.1
-3306/tcp open   mysql         MySQL 5.5.5-10.5.18-MariaDB-0+deb11u1
-| vulners: 
-|   MySQL 5.5.5-10.5.18-MariaDB-0+deb11u1: 
-|_    	NODEJS:602	0.0	https://vulners.com/nodejs/NODEJS:602
-3389/tcp closed ms-wbt-server
-8080/tcp closed http-proxy
-9090/tcp open   http          Node.js Express framework
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
-Read data files from: C:\Program Files (x86)\Nmap
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-# Nmap done at Sun Apr  2 00:58:28 2023 -- 1 IP address (1 host up) scanned in 28.53 seconds
+# Nmap 7.93 scan initiated Tue Apr 25 10:26:35 2023 as: "C:/Program Files (x86)/Nmap/nmap.exe" -v -oX - -sV --script vulners --script-args mincvss+1.0 -o output_Vuls_Nmap.txt 35.213.191.215
+ Increasing send delay for 35.213.191.215 from 0 to 5 due to 11 out of 17 dropped probes since last increase.
+ Increasing send delay for 35.213.191.215 from 5 to 10 due to 11 out of 11 dropped probes since last increase.
+ Nmap scan report for 215.191.213.35.bc.googleusercontent.com (35.213.191.215)
+ Host is up (0.038s latency).
+ Not shown: 995 filtered tcp ports (no-response)
+ PORT     STATE SERVICE VERSION
+ 22/tcp   open  ssh     OpenSSH 8.4p1 Debian 5+deb11u1 (protocol 2.0)
+ | vulners: 
+ |   cpe:/a:openbsd:openssh:8.4p1: 
+ |     	CVE-2021-28041	4.6	https://vulners.com/cve/CVE-2021-28041
+ |     	CVE-2021-41617	4.4	https://vulners.com/cve/CVE-2021-41617
+ |     	CVE-2020-14145	4.3	https://vulners.com/cve/CVE-2020-14145
+ |     	CVE-2016-20012	4.3	https://vulners.com/cve/CVE-2016-20012
+ |_    	CVE-2021-36368	2.6	https://vulners.com/cve/CVE-2021-36368
+ 80/tcp   open  http    Apache httpd 2.4.56 ((Debian))
+ |_http-server-header: Apache/2.4.56 (Debian)
+ 443/tcp  open  http    nginx 1.18.0
+ |_http-server-header: nginx/1.18.0
+ 8080/tcp open  http    CherryPy wsgiserver
+ |_http-server-header: server
+ 8082/tcp open  http    Jetty 9.4.48.v20220622
+ |_http-server-header: Jetty(9.4.48.v20220622)
+ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+ 
+ Read data files from: C:Program Files (x86)Nmap
+ Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+ # Nmap done at Tue Apr 25 10:27:52 2023 -- 1 IP address (1 host up) scanned in 76.99 seconds
+ 
