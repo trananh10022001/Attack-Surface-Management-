@@ -1,21 +1,25 @@
-[switch-protocol] [http] [info] http://112.213.89.38:80 [h2,h2c]
-[tech-detect:nginx] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-expose-headers] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-max-age] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-allow-methods] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-allow-headers] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:content-security-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:referrer-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:x-content-type-options] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-allow-origin] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:x-frame-options] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:permissions-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:clear-site-data] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:access-control-allow-credentials] [http] [info] http://112.213.89.38:80
-[http-missing-security-headers:strict-transport-security] [http] [info] http://112.213.89.38:80
-[waf-detect:nginxgeneric] [http] [info] http://112.213.89.38:80/
-[ptr-fingerprint] [dns] [info] 112.213.89.38 [ns8938.dotvndns.vn.]
+[default-apache2-page] [http] [info] http://35.240.241.201:80
+ [default-apache-test-all] [http] [info] http://35.240.241.201:80 [Apache/2.4.56 (Debian)]
+ [apache-detect] [http] [info] http://35.240.241.201:80 [Apache/2.4.56 (Debian)]
+ [http-missing-security-headers:access-control-max-age] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:access-control-allow-headers] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:content-security-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:access-control-allow-origin] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:strict-transport-security] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:x-frame-options] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:referrer-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:access-control-allow-methods] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:permissions-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:x-content-type-options] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:clear-site-data] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:access-control-allow-credentials] [http] [info] http://35.240.241.201:80
+ [http-missing-security-headers:access-control-expose-headers] [http] [info] http://35.240.241.201:80
+ [options-method] [http] [info] http://35.240.241.201:80 [HEAD,GET,POST,OPTIONS]
+ [ptr-fingerprint] [dns] [info] 35.240.241.201 [201.241.240.35.bc.googleusercontent.com.]
+ [openssh-detect] [network] [info] 35.240.241.201:22 [SSH-2.0-OpenSSH_8.4p1 Debian-5+deb11u1]
+ [waf-detect:apachegeneric] [http] [info] http://35.240.241.201:80/
+ 
