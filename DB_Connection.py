@@ -1,9 +1,9 @@
 import mysql.connector
 
-connection = mysql.connector.connect(host='localhost',
-                                     database='asm',
+connection = mysql.connector.connect(host='127.0.0.1',
                                      user='root',
-                                     password='1234')
+                                     password='123456789',
+                                     database='asm')
 
 if connection.is_connected():
     db_Info = connection.get_server_info()
@@ -12,4 +12,3 @@ if connection.is_connected():
     cursor.execute("select database();")
     record = cursor.fetchone()
     print("You're connected to database: ", record)
-
