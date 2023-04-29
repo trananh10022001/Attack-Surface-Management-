@@ -1,1 +1,2 @@
-http://112.213.89.38 [Nginx]
+http://35.213.191.215 [Apache HTTP Server:2.4.56,Debian,MySQL,PHP,WordPress:6.2]
+ 
