@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+    <link rel="stylesheet" href="/admin-template/vendors/datatables.net-bs4/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" defer="defer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <title>ASM</title>
+</head>
+<body>
+
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+    <div th:replace="~{/fragments/header.html}"></div>
+    <div class="main-content-wrap">
+
+        <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+        </header>
+        <div class="main-content-body">
+            <div class="subheader px-lg" style="padding: 0">
+                <div class="subheader-container">
+                    <div class="subheader-main">
+                        <nav aria-label="breadcrumb" class="ul-breadcrumb">
+                            <ol class="ul-breadcrumb-items">
+                                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                                >home</i></a></li>
+                                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                                <li class="breadcrumb-item active"><a href="#">Subdomain Ip Management</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <form th:action="@{/subdomain-ip}" method="get" class="input-group" style="position: relative;width: 75%;margin-left: auto;margin-bottom: 15px;">
+                                    <input class="form-control" id="textSearch" name="search" th:value="${searchField}" type="text" placeholder="Search for domain" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;">
+                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                                        <button class="btn btn-secondary"  type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;">
+                            <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">Subdomain Ip Management</h2>
+                            <div style="color: white" class="p-1 m-0 text-16">
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body table-responsive">
+                                <table id="dataTable" style="text-align: center" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="cursor-pointer sort-handler" style="width: 10%">No</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 10%">ID</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 25%">IP Address</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 30%">Subdomain Name</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 25%">Created Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="item,itemIndex : ${result.content}">
+                                        <tr class="to-pointer">
+                                            <td th:text="${result.number * result.size + itemIndex.index + 1}"></td>
+                                            <td th:text="${item.id}"></td>
+                                            <td th:text="${item.ip}"></td>
+                                            <td th:text="${item.subdomain.subdomainName}"></td>
+                                            <td th:text="${item.createdDate}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                                <ul class="pagination justify-content-center font-weight-bold" th:if="${result.totalPages > 0}">
+                                    <li class="page-item" th:if="${result.number + 1 > 1}">
+                                        <button class="page-link" th:onclick="|handlePage(1)|"><i class="material-icons ">keyboard_double_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item" th:if="${result.number + 1 > 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${result.number < 1 ? 1 : result.number})|"><i class="material-icons ">keyboard_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${result.totalPages >5 && result.number >2 && result.number < result.totalPages -1}"
+                                        th:classappend="${i eq result.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (result.number -1 < 1 ? 1 :  result.number -1 ) ,( result.number +3> result.totalPages ?  result.totalPages : result.number +3), 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${result.totalPages >5 && result.number >2 && result.number == result.totalPages -1}"
+                                        th:classappend="${i eq result.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (result.totalPages -4) ,(result.totalPages) , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${result.totalPages >5 && result.number <= 2 }"
+                                        th:classappend="${i eq result.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( 1 ,5, 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${result.totalPages <= 5}"
+                                        th:classappend="${i eq result.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence(1, result.totalPages , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li class="page-item" th:if="${result.number < result.totalPages - 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${result.number +2 > result.totalPages ? result.totalPages :result.number +2 })|"><i class="material-icons">keyboard_arrow_right</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item" th:if="${result.number < result.totalPages - 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${result.totalPages})|"><i class="material-icons">keyboard_double_arrow_right</i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let oldText;
+    let currentIndex;
+    $(".sort-handler").click(function (e) {
+        const index = $(this).index();
+        if (index != currentIndex || !currentIndex) {
+            if (oldText) {
+                $($('.sort-handler').get(currentIndex)).html(oldText);
+            }
+            currentIndex = index;
+        }
+        if (!$(this).text().includes(oldText) || !oldText) {
+            oldText = $(this).text();
+        }
+        $(this).html(oldText + ' &#8593;');
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("dataTable");
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[index];
+                y = rows[i + 1].getElementsByTagName("TD")[index];
+                if (dir == "asc") {
+                    if (new Intl.Collator().compare(x.innerHTML.toLowerCase(), y.innerHTML.toLowerCase()) == 1) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (new Intl.Collator().compare(x.innerHTML.toLowerCase(), y.innerHTML.toLowerCase()) == -1) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    $(this).html(oldText + ' &#8595;');
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

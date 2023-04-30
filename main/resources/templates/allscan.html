@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+    <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <!--    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css">-->
+    <!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.material.min.css">-->
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        function selectAllCheckboxes() {
+            var checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+            var selectAllCheckbox = document.getElementById('selectAll');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = selectAllCheckbox.checked;
+            }
+        }
+        function handleEdit(id){
+            window.location.href='/scan-edit?id='+id;
+        }
+        function handleDelete(id){
+            if(confirm("Are you sure want to delete?")) {
+                window.location.href = '/scan-delete?id=' + id;
+            }
+        }
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("example");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+        // $('#example').DataTable( {
+        //     "paging":   false,
+        //     "ordering": true,
+        //     "info":     false,
+        //
+        //     searching: false
+        // } );
+    </script>
+    <title>ASM</title>
+</head>
+
+<body>
+<!-- Navigation -->
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+    <div th:replace="~{/fragments/header.html}"></div>
+    <div class="main-content-wrap">
+        <!-- Start::Main header  -->
+        <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+            <!-- Start::Header menu-->
+            <!-- End::Header menu-->
+        </header>
+        <div class="main-content-body">
+            <!-- Start:: content (Your custom content)  -->
+            <div class="subheader px-lg" style="padding: 0">
+                <div class="subheader-container">
+                    <div class="subheader-main">
+                        <nav aria-label="breadcrumb" class="ul-breadcrumb">
+                            <ol class="ul-breadcrumb-items">
+                                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                                >home</i></a></li>
+                                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                                <li class="breadcrumb-item active"><a href="#">All Scan</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+                                    <div class="nav-pills-primary">
+                                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a
+                                                        class="nav-link active"
+                                                        id="pills-home-tab"
+                                                        data-toggle="pill"
+                                                        href="#"
+                                                        role="tab"
+                                                        aria-controls="pills-home"
+                                                        aria-selected="true"
+                                                >Scan</a
+                                                >
+                                            </li>
+                                            <li class="nav-item">
+                                                <a
+                                                        class="nav-link"
+                                                        id="pills-profile-tab"
+                                                        data-toggle="pill"
+                                                        th:href="@{/scan-settings}"
+                                                        role="tab"
+                                                        aria-controls="pills-profile"
+                                                        aria-selected="false"
+                                                >Setting</a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group" style="position: relative;width: 75%;margin-left: auto;margin-bottom: 15px;">
+                                    <input class="form-control" id="textSearch" value="" type="text" placeholder="Search for scan" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;">
+                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                                        <button class="btn btn-secondary"  type="button" th:onclick="|handleSearch()|">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;">
+                            <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">All Scan</h2>
+                            <div style="color: white" class="p-1 m-0 text-16">
+                                <!--                                <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#ModalAdd" style="cursor: pointer"></i>-->
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body table-responsive">
+                                <table id="example" style="text-align: center" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="cursor-pointer"><input type="checkbox" id="selectAll" onclick="selectAllCheckboxes()"/></th>
+                                        <th th:onclick="sortTable(1)" class="cursor-pointer">Domain Name</th>
+                                        <th th:onclick="sortTable(2)" class="cursor-pointer">Start Time</th>
+                                        <th th:onclick="sortTable(3)" class="cursor-pointer">End Time</th>
+                                        <th th:onclick="sortTable(4)" class="cursor-pointer">Schedule</th>
+                                        <th th:onclick="sortTable(5)" class="cursor-pointer">Status</th>
+                                        <th>Action</th>
+                                        <!--                                        <th></th>-->
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="item,itemIndex : ${domains.content}">
+                                        <tr class="to-pointer">
+                                            <td><input type="checkbox" th:value="${item.id}"/></td>
+                                            <td th:text="${item.domainName}"></td>
+                                            <td th:text="${item.startTime}"></td>
+                                            <td th:text="${item.endTime}"></td>
+                                            <td>Schedule</td>
+                                            <td th:switch="${item.status}">
+                                                <span class="badge  badge-success" th:case='0' th:text="Completed"></span>
+                                                <span class="badge  badge-light" th:case='1' th:text="Inprogress"></span>
+                                            </td>
+                                            <td>
+                                                <button class="btn text-primary rounded-circle m-0 btn-sm btn-icon" style="height: 0px !important;" th:onclick="|handleEdit(${item.id})|"><i class="material-icons" >edit</i><div class="ripple-container"></div></button>
+                                                <button class="btn text-danger rounded-circle m-0 btn-sm btn-icon" style="height: 0px !important;" th:onclick="|handleDelete(${item.id})|"><i class="material-icons">delete</i></button>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                                <ul class="pagination justify-content-center font-weight-bold pt-2" th:if="${domains.totalPages > 0}">
+                                    <li class="page-item">
+                                        <button class="page-link" th:onclick="|handlePage(1)|"><i class="material-icons ">keyboard_double_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item">
+                                        <button class="page-link" th:onclick="|handlePage(${domains.number < 1 ? 1 : domains.number})|"><i class="material-icons ">keyboard_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${domains.totalPages >5 && domains.number >2 && domains.number < domains.totalPages -1}"
+                                        th:classappend="${i eq domains.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (domains.number -1 < 1 ? 1 :  domains.number -1 ) ,( domains.number +3> domains.totalPages ?  domains.totalPages : domains.number +3), 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${domains.totalPages >5 && domains.number >2 && domains.number == domains.totalPages -1}"
+                                        th:classappend="${i eq domains.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (domains.totalPages -4) ,(domains.totalPages) , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${domains.totalPages >5 && domains.number <= 2 }"
+                                        th:classappend="${i eq domains.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( 1 ,5, 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${domains.totalPages <= 5}"
+                                        th:classappend="${i eq domains.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence(1, domains.totalPages , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li class="page-item">
+                                        <button class="page-link" th:onclick="|handlePage(${domains.number +2 > domains.totalPages ? domains.totalPages :domains.number +2 })|"><i class="material-icons">keyboard_arrow_right</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item">
+                                        <button class="page-link" th:onclick="|handlePage(${domains.totalPages})|"><i class="material-icons">keyboard_double_arrow_right</i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---->
+            <!-- End:: Footer-->
+        </div>
+        <!-- End::Main header-->
+    </div>
+</div>
+
+</body>
+</html>

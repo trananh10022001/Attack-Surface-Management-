@@ -1,0 +1,146 @@
+
+<div class="sidebar-panel">
+  <div class="brand"><span class="app-logo-text ml-2 text-20">ASM</span></div>
+  <!-- Start:: user-->
+  <div class="scroll-nav" data-perfect-scrollbar="" data-suppress-scroll-x="true">
+    <div class="app-user text-center">
+      <div class="app-user-photo"><img src="/admin-template/images/avatars/005-man-2.svg" alt="" /></div>
+      <div class="app-user-info"><span class="app-user-name" th:text="${session.account}"></span>
+        <div class="app-user-control"><a class="control-item" th:href="@{/sign-out}" onclick="if (!confirm('Are you sure want to sign out?')) return false"><i class="material-icons"> exit_to_app</i></a></div>
+      </div>
+    </div>
+    <!-- End:: user-->
+    <!-- Start:: side-nav-->
+    <div class="side-nav">
+      <div class="main-menu">
+        <nav class="sidebar-nav">
+          <ul id="ul-menu">
+            <li><a th:href="@{/domain}" style="color: #c7c7c7"><i class="material-icons nav-icon">domain</i>Domain Management</a></li>
+            <li><a th:href="@{/subdomain}" style="color: #c7c7c7"><i class="material-icons nav-icon">dns</i>Subdomain Management</a></li>
+            <li><a th:href="@{/subdomain-ip}" style="color: #c7c7c7"><i class="material-icons nav-icon">lan</i>Subdomain IP Management</a></li>
+            <li><a th:href="@{/result-n-map}" style="color: #c7c7c7"><i class="material-icons nav-icon">assignment_returned</i>Result NMap Management</a></li>
+            <li><a th:href="@{/result-nuclei}" style="color: #c7c7c7"><i class="material-icons nav-icon">assignment_return</i>Result Nuclei Management</a></li>
+            <li><a th:href="@{/result-vuls-n-map}" style="color: #c7c7c7"><i class="material-icons nav-icon">assignment_return</i>Result Vuls NMap Management</a></li>
+
+<!--            <li><a th:href="@{trash}" style="color: #c7c7c7"><i class="material-icons nav-icon">delete_sweep</i>Trash</a></li>-->
+<!--            <li><a th:href="@{/chart}" style="color: #c7c7c7"><i class="material-icons nav-icon">collections</i>Chart Management</a></li>-->
+            <li><a th:href="@{/cve/all}" style="color: #c7c7c7"><i class="material-icons nav-icon">inventory</i>CVE Management</a></li>
+            <li><a th:href="@{/scan}" style="color: #c7c7c7"><i class="material-icons nav-icon">radar</i>All Scan</a></li>
+<!--            <li><a href="${gallery}"><i class="material-icons nav-icon">collections</i><spring:message code="header.gallery.management"/></a></li>-->
+<!--            <li><a href="${notification}"><i class="material-icons nav-icon">circle_notifications</i><spring:message code="header.notification.management"/></a></li>-->
+<!--            <li><a href="${faq}"><i class="material-icons nav-icon">quiz</i>FAQ Management</a></li>-->
+<!--            <li><a href="${banner}"><i class="material-icons nav-icon">slideshow</i><spring:message code="header.banner.management"/></a></li>-->
+<!--            <li><a href="${kol}"><i class="material-icons nav-icon">face</i><spring:message code="header.kol.management"/></a></li>-->
+<!--            <li><a href="${event}"><i class="material-icons nav-icon">event</i>Event Management</a></li>-->
+          </ul>
+        </nav>
+      </div>
+    </div>
+<!--    <div class="d-flex justify-content-center" style="margin-top: 360px; gap: 10px">-->
+<!--      <a href="#" onclick="changeLanguage('ko')" style="width:30px;"><img src="<c:url value="/resources/images/icon/south-korea.png"/>" style="width: 100%;height: auto" class="${locale == 'ko' ? 'lang-image-kr' : ''}"/></a>-->
+<!--      <a href="#" onclick="changeLanguage('en')" style="width:30px;"><img src="<c:url value="/resources/images/icon/united-kingdom.png"/>" style="width: 100%;height: auto" class="${locale == 'en' ? 'lang-image-en' : ''}"/></a>-->
+<!--    </div>-->
+  </div>
+</div>
+<style>
+  /*.lang-image-kr {*/
+  /*  border: 1px solid #ff224e;*/
+  /*  border-radius: 8px;*/
+  /*}*/
+  /*.lang-image-en {*/
+  /*  border: 1px solid #0f89ff;*/
+  /*  border-radius: 8px;*/
+  /*}*/
+</style>
+<script>
+  // get the current URL
+  var url = window.location.href;
+  var baseUrl = url.split('?')[0];
+
+  // get all menu items
+  var menuItems = document.querySelectorAll('#ul-menu li');
+
+  // loop through menu items
+  menuItems.forEach(function(item) {
+    // get the link in the menu item
+    var link = item.querySelector('a').href;
+
+    // if the current URL contains the link, add the active class
+    if (baseUrl.indexOf(link) !== -1 && baseUrl.endsWith(link)) {
+      item.querySelector('a').style.color = 'white';
+    }
+  });
+  function handlePage(choosePage) {
+    let link = window.location.href;
+    if (link.indexOf("?") == -1) {
+      link += "?page=" + choosePage;
+    } else if (link.indexOf("page") == -1) {
+      link += "&page=" + choosePage;
+    } else {
+      let startOfPage = link.indexOf("page=");
+      let endOfPage = link.indexOf("&", startOfPage);
+      if (endOfPage == -1) {
+        endOfPage = link.length;
+      }
+      let currentPage = link.slice(startOfPage + 5, endOfPage);
+      if (currentPage == choosePage) {
+        return;
+      }
+      link = link.replace(/page=\d+/, "page=" + choosePage);
+    }
+    window.location.href = link;
+  }
+  function handleSearch() {
+    let link = window.location.href;
+    let search = document.getElementById("textSearch").value;
+    if (link.indexOf("?") == -1) {
+      link = link + "?search=" + search + "&page=1";
+      window.location.href = link;
+    } else {
+      link = link.slice(0, link.indexOf("?")) + "?search=" + search + "&page=1";
+      window.location.href = link;
+    }
+    window.location.href = link;
+  }
+
+  function handleSearchCve() {
+    let link = window.location.href;
+    let search = document.getElementById("textSearch").value;
+
+    if(link.indexOf("?chartColumn") != -1) {
+      const parsedUrl = new URL(link);
+      const origin = parsedUrl.origin;
+      const pathname = parsedUrl.pathname;
+      const search1 = parsedUrl.search.split("&")[0];
+      const newUrl = origin + pathname + search1;
+      window.location.href = newUrl + "&search=" + search + "&page=1";
+    }
+
+  }
+
+  function exportExcel() {
+    let link = window.location.href;
+
+    if(link.indexOf("?chartColumn") != -1) {
+      const parsedUrl = new URL(link);
+
+      const origin = parsedUrl.origin;
+      const pathname = parsedUrl.pathname;
+      const search = parsedUrl.search.split("&")[0];
+      const newUrl = origin + "/export/excel" + pathname + search;
+      window.location.href = newUrl;
+    }
+  }
+
+  function exportExcelAll(){
+    let link = window.location.href;
+
+    const parsedUrl = new URL(link);
+
+    const origin = parsedUrl.origin;
+    const pathname = parsedUrl.pathname;
+    const newUrl = origin + "/export/excel" + pathname;
+    window.location.href = newUrl;
+  }
+</script>
+
