@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400|Roboto:300,400,500,700,900|Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/admin-template/css/pages/session/session.v1.min.css">
+  <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css">
+  <title>ASM</title>
+</head>
+
+<body>
+<div class="page-wrap slate">
+  <div class="session-form-hold" style="max-width: 600px;">
+    <div class="card text-center" style="width: 600px; height: 600px;">
+      <div class="card-body">
+        <span class="text-primary text-18 d-block font-weight-bold">ASM</span>
+        <span class="mb-md text-muted mb-lg d-block">Create a new account</span>
+        <div th:if="${errorMessage != null}" style="color: red;">
+          <p th:text="${errorMessage}"></p>
+        </div>
+        <form action="#" th:action="@{/sign-up}" th:object="${register}" method="post" style="margin-bottom: 100px">
+        <div class="input-group  input-light mb-md">
+          <input type="text" class="form-control" required th:field="*{username}" placeholder="Username">
+        </div>
+        <div class="input-group  input-light mb-md">
+          <input type="password" style="width: 100%" class="form-control" required th:field="*{password}" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$" placeholder="Password">
+          <small>Must have a Capital, a Number, a Special Character and a normal character with the min length of 6</small><br><br>
+        </div>
+        <div class="input-group  input-light mb-md">
+          <input type="password" class="form-control" required th:field="*{rePassword}" placeholder="Confirm Password">
+        </div>
+          <button type="submit" style="width: 50%" class="btn btn-raised btn-raised-primary btn-block mb-xl">Submit</button>
+        </form>
+        <p>Already have an account?</p>
+        <a style="width: 50%" th:href="@{/sign-in}" class="btn btn-raised btn-raised-secondary btn-block mb-xl">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

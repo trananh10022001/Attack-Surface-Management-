@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="/admin-template/css/pages/session/session.v1.min.css" />
+    <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <title>Domain Check</title>
+</head>
+<body>
+<div class="page-wrap slate">
+    <div class="session-form-hold">
+        <div class="card text-center">
+<!--            action="submit" method="post"-->
+            <div class="card-body">
+                <span class="text-primary text-18 d-block font-weight-bold"> ASM </span>
+                <span class="mb-md text-muted mb-lg d-block">Check your domain</span>
+                <form id="domainForm" name="domainForm">
+                <div class="input-group  input-light mb-md">
+                    <input id="domain" name="domain" type="text" class="form-control" placeholder="Domain">
+                </div>
+                <button type="button" onclick="submitForm()" class="btn btn-raised btn-raised-primary btn-block mb-xl">Check</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function submitForm(){
+        // var form = document.getElementById('domainForm');
+        callPython(document.getElementById("domain").value);
+        // form.submit();
+    }
+    function callPython(data)
+    {
+        var ws = new WebSocket("ws://localhost:1337/");
+
+        ws.onopen = function(){
+            console.log("Connection is Established");
+            console.log(data.toString());
+
+            ws.send(data.toString());
+        };
+
+        ws.onmessage = function(evt) {
+            var received_msg = evt.data;
+            console.log(received_msg);
+        };
+    }
+</script>
+</html>

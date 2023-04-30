@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <link rel="stylesheet" href="/admin-template/css/vendors.bundle.min.css" />
+    <link rel="stylesheet" href="/admin-template/css/main.bundle.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<!--    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/4.0.0/material-components-web.min.css">-->
+<!--    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/dataTables.material.min.css">-->
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <title>ASM</title>
+</head>
+
+<body>
+<!-- Navigation -->
+<div class="app-admin-wrap-layout-1 sidebar-full sidebar-theme-slate">
+    <div th:replace="~{/fragments/header.html}"></div>
+    <div class="main-content-wrap">
+        <!-- Start::Main header  -->
+        <header class="main-header bg-card d-flex flex-row justify-content-between align-items-center px-lg">
+            <!-- Start::Header menu-->
+            <!-- End::Header menu-->
+        </header>
+        <div class="main-content-body">
+            <!-- Start:: content (Your custom content)  -->
+            <div class="subheader px-lg" style="padding: 0">
+                <div class="subheader-container">
+                    <div class="subheader-main">
+                        <nav aria-label="breadcrumb" class="ul-breadcrumb">
+                            <ol class="ul-breadcrumb-items">
+                                <li class="breadcrumb-home"><a href="#"> <i class="material-icons"
+                                >home</i></a></li>
+                                <li class="breadcrumb-item"><a href="#">ASM</a></li>
+                                <li class="breadcrumb-item active"><a href="#">Cves Management</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="input-group" style="position: relative;width: 25%;margin-left: auto;margin-bottom: 15px;float: left">
+<!--                                    <select class="form-control js-basic-example2" id="filterType" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;" onchange="filter()">-->
+<!--                                        <option value="application" ${filter == 'cve_id' ? 'selected' : ''}>CVE ID</option>-->
+<!--                                        <option value="image" ${filter == 'description' ? 'selected' : ''}>Description</option>-->
+<!--                                    </select>-->
+<!--                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">-->
+<!--                                    </div>-->
+<!--&lt;!&ndash;                                    button expert excel not dropdown&ndash;&gt;-->
+<!--                                    <div class="btn-group" style="margin-left: 10px">-->
+<!--                                        <button th:onclick="|exportExcel()|" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                            <i class="fa fa-download">Export Excel</i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <form th:action="@{/cve/all}" method="get" class="input-group" style="position: relative;width: 75%;margin-left: auto;margin-bottom: 15px;">
+                                    <input class="form-control" id="textSearch" name="search" th:value="${searchField}" type="text" placeholder="Search for cves" style="margin-left:-2%;background: #cfcfcf;border-radius: 20px;padding: 10px 20px;">
+                                    <div class="input-group-append" style="position: absolute;right: 0;z-index: 10;">
+                                        <button class="btn btn-secondary"  type="submit">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-header" style="background: #242939 ;display: flex;justify-content: space-between;">
+                            <h2 class="p-1 m-0 text-16 font-weight-semi " style="color: white">Cves Management</h2>
+                            <div style="color: white" class="p-1 m-0 text-16">
+<!--                                <i class="fa fa-plus" aria-hidden="true" data-toggle="modal" data-target="#ModalAdd" style="cursor: pointer"></i>-->
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body table-responsive">
+                                <table id="dataTable" style="text-align: center" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="cursor-pointer sort-handler" style="width: 10%">ID</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 15%">CVE_ID</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 15%">CVSS_point</th>
+                                            <th class="cursor-pointer sort-handler" style="width: 50%">Description</th>
+                                            <th class="cursor-pointer" style="width: 20%">More Information</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="item,itemIndex : ${cves.content}">
+                                        <tr class="to-pointer">
+<!--                                            <td th:text="${itemIndex.index+1}"></td>-->
+                                            <td th:text="${item.id}"></td>
+                                            <td th:text="${item.cveId}"></td>
+                                            <td th:text="${item.cvssPoint}"></td>
+                                            <td th:text="${item.descriptions}"></td>
+                                            <td><a th:href="${item.link}">Link</a></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+
+                                <ul class="pagination justify-content-center font-weight-bold pt-2" th:if="${cves.totalPages > 0}">
+                                    <li class="page-item" th:if="${cves.number + 1 > 1}">
+                                        <button class="page-link" th:onclick="|handlePage(1)|"><i class="material-icons ">keyboard_double_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item" th:if="${cves.number + 1 > 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${cves.number < 1 ? 1 : cves.number})|"><i class="material-icons ">keyboard_arrow_left</i>
+                                        </button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${cves.totalPages >5 && cves.number >2 && cves.number < cves.totalPages -1}"
+                                        th:classappend="${i eq cves.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (cves.number -1 < 1 ? 1 :  cves.number -1 ) ,( cves.number +3> cves.totalPages ?  cves.totalPages : cves.number +3), 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${cves.totalPages >5 && cves.number >2 && cves.number == cves.totalPages -1}"
+                                        th:classappend="${i eq cves.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( (cves.totalPages -4) ,(cves.totalPages) , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${cves.totalPages >5 && cves.number <= 2 }"
+                                        th:classappend="${i eq cves.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence( 1 ,5, 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li aria-current="page" class="page-item"
+                                        th:if="${cves.totalPages <= 5}"
+                                        th:classappend="${i eq cves.number + 1} ? 'active'"
+                                        th:each="i : ${#numbers.sequence(1, cves.totalPages , 1)}">
+                                        <button class="page-link page-number" th:onclick="|handlePage(${i})|"
+                                                th:text="${i}"></button>
+                                    </li>
+                                    <li class="page-item" th:if="${cves.number < cves.totalPages - 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${cves.number +2 > cves.totalPages ? cves.totalPages :cves.number +2 })|"><i class="material-icons">keyboard_arrow_right</i>
+                                        </button>
+                                    </li>
+                                    <li class="page-item" th:if="${cves.number < cves.totalPages - 1}">
+                                        <button class="page-link" th:onclick="|handlePage(${cves.totalPages})|"><i class="material-icons">keyboard_double_arrow_right</i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!---->
+            <!-- End:: Footer-->
+        </div>
+        <!-- End::Main header-->
+    </div>
+</div>
+<script>
+    let oldText;
+    let currentIndex;
+    $(".sort-handler").click(function (e) {
+        const index = $(this).index();
+        if (index != currentIndex || !currentIndex) {
+            if (oldText) {
+                $($('.sort-handler').get(currentIndex)).html(oldText);
+            }
+            currentIndex = index;
+        }
+        if (!$(this).text().includes(oldText) || !oldText) {
+            oldText = $(this).text();
+        }
+        // if (oldText.include('&#8593;')){
+        //     oldText.replace('&#8593;', '');
+        // } else if (oldText.include('&#8595;')){
+        //     oldText.replace('&#8595;', '');
+        // }
+        $(this).html(oldText + ' &#8593;');
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("dataTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[index];
+                y = rows[i + 1].getElementsByTagName("TD")[index];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (new Intl.Collator().compare(x.innerHTML.toLowerCase(), y.innerHTML.toLowerCase()) == 1) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (new Intl.Collator().compare(x.innerHTML.toLowerCase(), y.innerHTML.toLowerCase()) == -1) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    $(this).html(oldText + ' &#8595;');
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
