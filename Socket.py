@@ -6,6 +6,7 @@ from datetime import datetime
 
 async def scan(websocket):
     name = await websocket.recv()
+    print('The target: '+name)
     main.scanDomain(name)
     cursor = DB_Connection.cursor
     query0 = "SELECT domain.id FROM asm.domain WHERE domain.domain_name = '"+str(name)+"' ORDER BY domain.id DESC LIMIT 1;"
