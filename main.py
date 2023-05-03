@@ -10,8 +10,10 @@ from bs4 import BeautifulSoup
 def scanDomain(domain):
     #AMASS
     AMASS_PATH = 'C:\\Users\\DOAN\\go\\bin\\amass.exe'
+    NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
+    HttpxPath = "C:\\Users\\DOAN\\go\\bin\\httpx.exe"
     output_file = "subdomains.txt"
-    cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file}")
+    cmd = os.system(f"{AMASS_PATH} enum -passive -d {domain} -o {output_file} -timeout 1")
     now = datetime.now()
     cursor = DB_Connection.cursor
 
@@ -54,7 +56,10 @@ def scanDomain(domain):
                 result += f"{subdomain}: {answer} \n"
         except dns.resolver.NXDOMAIN:
             print(f"{subdomain}: no such domain")
-
+    for subdomain in subdomains1:
+        print(f"Scanning subdomain "+ str(subdomain) +" for vulnerabilities with Nuclei and Httpx...")
+        cmd1 = os.system(f"{NUCLEI_PATH} -target "+str(subdomain) + " -o nuclei.txt")
+        cmd2 = os.system(f"{HttpxPath} -target "+str(subdomain) +" -no-color -tech-detect  -o output_httpx.txt")
     with open("listIP.txt", mode='w') as f:
         f.write(result)
     with open("ListIP.txt", "r") as f:
@@ -71,7 +76,7 @@ def scanDomain(domain):
     DB_Connection.connection.commit()
 
     ###NMAP
-    NUCLEI_PATH = "C:\\Users\\DOAN\\go\\bin\\nuclei.exe"
+    
     listIpFile = "listIP.txt"
     nmap = nmap3.Nmap()
 
@@ -127,7 +132,6 @@ def scanDomain(domain):
                 DB_Connection.connection.commit()
                 cursor = DB_Connection.cursor
 
-                HttpxPath = "C:\\Users\\DOAN\\go\\bin\\httpx.exe"
                 cmd = os.system(f"{HttpxPath} -target {ip} -ports "+port['port'] +" -no-color -tech-detect  -o output_httpx.txt")
                 with open("output_httpx.txt", "r") as f:
                     output = f.read()
