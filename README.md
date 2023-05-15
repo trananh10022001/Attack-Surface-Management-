@@ -1,4 +1,4 @@
-This is my Capston Project: Attack Surface Management Platform.
+This is my Capstone Project: Attack Surface Management Platform.
 My team is IAP491_G1 included member:
 1) Trần Ngọc Anh - Team Leader
 2) Nguyễn Minh Khánh
